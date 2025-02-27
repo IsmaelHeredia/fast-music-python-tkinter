@@ -1,0 +1,8 @@
+*.log
+*.pot
+*.pyc
+__pycache__
+database.db
+musictk.db
+.env
+client_secrets.json

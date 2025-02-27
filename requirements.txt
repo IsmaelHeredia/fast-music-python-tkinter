@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+ttkbootstrap
+python-vlc
+PyDrive
+BeautifulSoup4
+yt-dlp
+pytube
+moviepy

@@ -151,7 +151,6 @@ class formEstacion(object):
     def procesar_headers(self, headers):
         self.escribir_consola("Información de transmisión:")
         for key, value in headers.items():
-            print(f"{key}: {value}")
             self.escribir_consola(f"{key}: {value}")
 
     def play_stream(self):

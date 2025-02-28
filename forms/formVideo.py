@@ -69,8 +69,6 @@ class formVideo(object):
                 nextMedia = ids[0]
             else:
                 nextMedia = ids[index]
-            print("index", currentIndex)
-            print("next", nextMedia)
             self.stop_video()
             self.disableFocusVideoTable()
             self.videoIdColumnActive = nextMedia
@@ -213,7 +211,6 @@ class formVideo(object):
             self.repeatVideoMode = False
 
     def loadPlaylistsVideos(self):
-        print("playlists videos")
         self.videosPlaylists = formPlaylists()
         self.videosPlaylists.setDashboard(self)
         self.videosPlaylists.setMediaType(2)

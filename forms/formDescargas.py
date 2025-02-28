@@ -86,27 +86,19 @@ class formDescargas(object):
 
         if tipoCombo == 1: # Canciones
             if len(links) == 1:
-                print("download-song")
                 option_string = "-download-song "
             else:
                 self.filename_generated = self.generate_filename(links)
-                print("filename generated", self.filename_generated)
-                print("download-songs")
                 option_string = "-download-songs "
         elif tipoCombo == 2: # Videos
             if len(links) == 1:
-                print("download-video")
                 option_string = "-download-video "
             else:
                 self.filename_generated = self.generate_filename(links)
-                print("filename generated", self.filename_generated)
-                print("download-videos")
                 option_string = "-download-videos "
         elif tipoCombo == 3: # Playlists de canciones
-            print("download-playlist-songs")
             option_string = "-download-playlist-songs "
         elif tipoCombo == 4: # Playlists de videos
-            print("download-playlist-videos")
             option_string = "-download-playlist-videos "
 
         linkTarget = None

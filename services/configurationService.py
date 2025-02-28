@@ -72,11 +72,12 @@ class ConfigurationService:
             sync_folder = config.songs_directory
             existing_playlists = {p.name: p.id for p in session.query(PlaylistSong).all()}
             existing_songs = {s.fullpath for s in session.query(Song).all()}
-
             new_songs = []
-            new_playlists = {}
-
+            
             for root, _, files in os.walk(sync_folder):
+                if root == sync_folder:
+                    continue
+
                 playlist_name = os.path.basename(root)
                 playlist_id = existing_playlists.get(playlist_name)
 
@@ -85,22 +86,26 @@ class ConfigurationService:
                     session.add(new_playlist)
                     session.flush()
                     playlist_id = new_playlist.id
-                    new_playlists[playlist_name] = playlist_id
+                    existing_playlists[playlist_name] = playlist_id
 
                 files = sorted(files, key=lambda f: os.path.getctime(os.path.join(root, f)), reverse=True)
-
+                
                 for file in files:
-                    if file.endswith(".mp3"):
-                        path = os.path.join(root, file)
-                        if path not in existing_songs:
-                            audio = MP3(path)
-                            new_songs.append(Song(
-                                title=os.path.splitext(file)[0],
-                                duration_string=convert_to_duration(audio.info.length),
-                                fullpath=path,
-                                playlist_id=playlist_id
-                            ))
-
+                    path = os.path.join(root, file)
+                    if file.endswith(".mp3") and path not in existing_songs:
+                        audio = MP3(path)
+                        new_songs.append(Song(
+                            title=os.path.splitext(file)[0],
+                            duration_string=convert_to_duration(audio.info.length),
+                            fullpath=path,
+                            playlist_id=playlist_id
+                        ))
+            
+            all_songs = session.query(Song).all()
+            for song in all_songs:
+                if not os.path.isfile(song.fullpath):
+                    session.delete(song)
+            
             if new_songs:
                 session.bulk_save_objects(new_songs)
                 session.commit()
@@ -115,11 +120,12 @@ class ConfigurationService:
             sync_folder = config.videos_directory
             existing_playlists = {p.name: p.id for p in session.query(PlaylistVideo).all()}
             existing_videos = {v.fullpath for v in session.query(Video).all()}
-
             new_videos = []
-            new_playlists = {}
-
+            
             for root, _, files in os.walk(sync_folder):
+                if root == sync_folder:
+                    continue
+
                 playlist_name = os.path.basename(root)
                 playlist_id = existing_playlists.get(playlist_name)
 
@@ -128,13 +134,13 @@ class ConfigurationService:
                     session.add(new_playlist)
                     session.flush()
                     playlist_id = new_playlist.id
-                    new_playlists[playlist_name] = playlist_id
-
+                    existing_playlists[playlist_name] = playlist_id
+                
                 files = sorted(files, key=lambda f: os.path.getctime(os.path.join(root, f)), reverse=True)
-
+                
                 def process_video(file):
                     path = os.path.join(root, file)
-                    if path not in existing_videos:
+                    if file.endswith(".mp4") and path not in existing_videos:
                         video = VideoFileClip(path)
                         return Video(
                             title=os.path.splitext(file)[0],
@@ -142,11 +148,16 @@ class ConfigurationService:
                             fullpath=path,
                             playlist_id=playlist_id
                         )
-
+                
                 with ThreadPoolExecutor(max_workers=4) as executor:
                     results = list(executor.map(process_video, [f for f in files if f.endswith(".mp4")]))
                     new_videos.extend(filter(None, results))
-
+            
+            all_videos = session.query(Video).all()
+            for video in all_videos:
+                if not os.path.isfile(video.fullpath):
+                    session.delete(video)
+            
             if new_videos:
                 session.bulk_save_objects(new_videos)
                 session.commit()

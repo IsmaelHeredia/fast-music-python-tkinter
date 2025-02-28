@@ -457,9 +457,9 @@ class formSincronizacion(object):
 
     def check_sync_from_gd(self):
         if self.folder_gd_music == "" or self.folder_gd_music == None:
-            Messagebox.ok(message="Se debe configurar el directorio de Google Drive", parent = self)
+            Messagebox.ok(message="Se debe configurar el directorio de Google Drive")
         else:
-            response = Messagebox.okcancel("Esta seguro de sincronizar con Google Drive ?", parent=self)
+            response = Messagebox.okcancel("Esta seguro de sincronizar con Google Drive ?")
             if response == "OK":
                 self.sincronizarGD_btn.config(state=DISABLED)
                 self.sincronizarPC_btn.config(state=DISABLED)
@@ -471,9 +471,9 @@ class formSincronizacion(object):
 
     def check_sync_from_pc(self):
         if self.folder_gd_music == "" or self.folder_gd_music == None:
-            Messagebox.ok(message="Se debe configurar el directorio de Google Drive", parent = self)
+            Messagebox.ok(message="Se debe configurar el directorio de Google Drive")
         else:
-            response = Messagebox.okcancel("Esta seguro de sincronizar desde la PC ?", parent=self)
+            response = Messagebox.okcancel("Esta seguro de sincronizar desde la PC ?")
             if response == "OK":
                 self.sincronizarGD_btn.config(state=DISABLED)
                 self.sincronizarPC_btn.config(state=DISABLED)

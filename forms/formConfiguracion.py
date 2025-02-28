@@ -143,7 +143,7 @@ class formConfiguracion(ttk.Toplevel):
         #
 
         notebook.add(tab_multimedia, text="Multimedia")
-        notebook.add(tab_estaciones, text="Estaciones")
+        notebook.add(tab_estaciones, text="Streams")
         notebook.add(tab_sincronizacion, text="Sincronización")
         notebook.add(tab_descargas, text="Descargas")
 
@@ -184,7 +184,6 @@ class formConfiguracion(ttk.Toplevel):
         Messagebox.ok(message=mensaje, parent = self)
 
     def escanearMultimedia(self):
-        print(self.directorioCancionesMultimedia.get(), self.directorioVideosMultimedia.get())
         self.scanButton.config(text="Escaneando")
         self.scanButton.config(state=DISABLED)
         threadScan = threading.Thread(target=self.iniciar_escaneo)
@@ -200,7 +199,7 @@ class formConfiguracion(ttk.Toplevel):
         estadoImportacion = self.stationsService.importFile(json_file)
         mensaje = None
         if estadoImportacion == True:
-            mensaje = "La importación se ejecuto correctamente"
+            mensaje = "La importación se ejecutó correctamente"
         else:
             mensaje = "Ocurrió un error en la importación"
         self.after(1000, self.finalizar_importacion, mensaje)
@@ -227,7 +226,6 @@ class formConfiguracion(ttk.Toplevel):
             stationsList = []
             stations = self.stationsService.list()
             for station in stations:
-                print(station)
                 stationsList.append({
                     "id": station["id"],
                     "name": station["name"],
@@ -236,13 +234,13 @@ class formConfiguracion(ttk.Toplevel):
                 })
             with open(file_exported.name, "w") as outfile:
                 json.dump(stationsList, outfile, indent=4)
-            Messagebox.ok(message="Las estaciones fueron exportadas correctamente", parent = self)
+            Messagebox.ok(message="La exportación se ejecutó correctamente", parent = self)
 
     def iniciar_validacion(self):
         estadoValidacion = self.stationsService.validate()
         mensaje = None
         if estadoValidacion == True:
-            mensaje = "La validación se ejecuto correctamente"
+            mensaje = "La validación se ejecutó correctamente"
         else:
             mensaje = "Ocurrió un error en la importación"
         self.after(1000, self.finalizar_validacion, mensaje)
